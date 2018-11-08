@@ -12,23 +12,28 @@ import { Observer } from 'rxjs/Observer';
 
 @Injectable()
 export class EntryDataServiceProvider {
+
+  private nextID: number = 0;
   private entries:Entry[] = [];
   private serviceObserver: Observer<Entry[]>;
   private clientObservable: Observable<Entry[]>;
 
   constructor() { 
     this.loadFakeEntries(); 
-    let that = this;
     this.clientObservable = Observable.create(observerThatWasCreated => {
-      that.serviceObserver = observerThatWasCreated;
+      this.serviceObserver = observerThatWasCreated;
     });
   }
 
   
 
+  private getUniqueID(): number {
+    return this.nextID++;
+  }
 
 
 public addEntry(entry:Entry) {
+  entry.id = this.getUniqueID();
   this.entries.push(entry);
   this.notifySubscribers();
   // console.log('added an entry, the list is now: ', this.entries)
@@ -47,14 +52,17 @@ public getObservable(): Observable<Entry[]> {
 private loadFakeEntries() {
   this.entries = [
     {
+      id: this.getUniqueID(),
       title: "Latest Entry",
       text: "Today I went to my favorite class, SI 669. It was super great."
     },
     {
+      id: this.getUniqueID(),
       title: "Earlier Entry",
       text: "I can't wait for Halloween! I'm going to eat so much candy!!!"
     },
     {
+      id: this.getUniqueID(),
       title: "First Entry",
       text: "OMG Project 1 was the absolute suck!"
     }
@@ -65,6 +73,24 @@ private loadFakeEntries() {
 private notifySubscribers(): void {
   this.serviceObserver.next(undefined);
 }
+
+
+
+public getEntryByID(id: number): Entry {
+  for (let e of this.entries) {
+    if (e.id === id) {
+      let clone = JSON.parse(JSON.stringify(e));
+      return clone;
+    }
+  }
+  return undefined;
+}
+
+
+
+
+
+
 
 
 

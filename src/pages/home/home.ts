@@ -18,7 +18,7 @@ export class HomePage {
 
       this.entryDataService.getObservable().subscribe(update => {
         this.entries = entryDataService.getEntries();
-
+        console.log(this.entries);
         });
 
         this.entries = entryDataService.getEntries();
@@ -35,6 +35,11 @@ export class HomePage {
     this.navCtrl.push(EntryDetailPage);
   }
 
+
+private editEntry(entryID: number) {
+  console.log("editing entry ", entryID);
+  this.navCtrl.push(EntryDetailPage, {"entryID": entryID});
+}
 
 
 }

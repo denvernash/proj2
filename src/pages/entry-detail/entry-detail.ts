@@ -18,9 +18,27 @@ import { EntryDataServiceProvider } from '../../providers/entry-data-service/ent
 })
 export class EntryDetailPage {
 
-  private entryTitle: string;
-  private entryText: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public entryDataService: EntryDataServiceProvider) {
+  private entry: Entry;
+
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public entryDataService: EntryDataServiceProvider) {
+
+
+
+    let entryID = this.navParams.get("entryID");
+    let entry = this.entryDataService.getEntryByID(entryID);
+
+  if (entryID === undefined) {
+    this.entry = new Entry();
+    this.entry.title = "";
+    this.entry.text = "";
+    this.entry.id = -1; // placeholder for 'temporary' entry
+  } else {
+  this.entry = this.entryDataService.getEntryByID(entryID);
+  }
+    console.log("retrieved entry:", entry);
+
   }
 
 
@@ -31,11 +49,10 @@ export class EntryDetailPage {
 // }
 
 public saveEntry() {
- 
-  let newEntry = new Entry();
-  newEntry.title = this.entryTitle;
-  newEntry.text = this.entryText;
- this.entryDataService.addEntry(newEntry);
+  // let newEntry = new Entry();
+  // newEntry.title = this.entryTitle;
+  // newEntry.text = this.entryText;
+ this.entryDataService.addEntry(this.entry);
  this.navCtrl.pop();
 }
 
