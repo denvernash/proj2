@@ -12,11 +12,15 @@
         <button ion-button full (click)="addEntry()">Add Entry</button>
       </ion-item>
 
-    <ion-item *ngFor="let entry of entries" (click)="editEntry(entry.id)">
-      <ion-label>
+    <ion-item *ngFor="let entry of entries">
+      <button ion-button clear icon-only item-start
+      (click)="deleteEntry(entry.id)">
+          <ion-icon name="close-circle"></ion-icon>
+      </button>
+      <ion-label (click)="editEntry(entry.id)">
         <h2>{{entry.title}}</h2>
       </ion-label>
-      <ion-label>
+      <ion-label (click)="editEntry(entry.id)">
         <p>{{entry.text}}</p>
       </ion-label>
     </ion-item>

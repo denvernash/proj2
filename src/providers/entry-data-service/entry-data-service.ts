@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Entry } from '../../models/entry';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { Storage } from '@ionic/storage';
+
 
 /*
   Generated class for the EntryDataServiceProvider provider.
@@ -18,11 +20,23 @@ export class EntryDataServiceProvider {
   private serviceObserver: Observer<Entry[]>;
   private clientObservable: Observable<Entry[]>;
 
-  constructor() { 
+  constructor(private storage: Storage) { 
     this.loadFakeEntries(); 
     this.clientObservable = Observable.create(observerThatWasCreated => {
       this.serviceObserver = observerThatWasCreated;
     });
+    this.storage.get('myDiaryEntries').then(data => {
+      if (data != undefined && data != null) {
+        this.entries = JSON.parse(data);
+     
+      }
+
+    }, err =>{
+      console.log(err)
+    });
+
+
+
   }
 
   
@@ -36,6 +50,7 @@ public addEntry(entry:Entry) {
   entry.id = this.getUniqueID();
   this.entries.push(entry);
   this.notifySubscribers();
+  this.saveData();
   // console.log('added an entry, the list is now: ', this.entries)
 }
 
@@ -74,6 +89,11 @@ private notifySubscribers(): void {
   this.serviceObserver.next(undefined);
 }
 
+private saveData(): void {
+  let key = 'myDiaryEntries';
+  this.storage.set(key, JSON.stringify(this.entries));
+}
+
 
 
 public getEntryByID(id: number): Entry {
@@ -86,10 +106,34 @@ public getEntryByID(id: number): Entry {
   return undefined;
 }
 
+public updateEntry(id: number, newEntry: Entry): void {
+  let entryToUpdate: Entry = this.findEntryByID(id);
+  entryToUpdate.title = newEntry.title;
+  entryToUpdate.text = newEntry.text;
+  this.notifySubscribers();
+  this.saveData();
+}
 
+private findEntryByID(id: number): Entry {
+  for (let e of this.entries) {
+    if (e.id === id) {
+      return e;
+    }
+  }
+  return undefined;
+}
 
-
-
+public removeEntry(id: number): void {
+  for (let i=0; i < this.entries.length; i++) {
+    let iID = this.entries[i].id;
+    if (iID === id) {
+      this.entries.splice(i, 1);
+      break;
+    }
+  }
+  this.notifySubscribers();
+  this.saveData();
+}
 
 
 

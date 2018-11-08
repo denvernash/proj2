@@ -41,5 +41,12 @@ private editEntry(entryID: number) {
   this.navCtrl.push(EntryDetailPage, {"entryID": entryID});
 }
 
+private deleteEntry(entryID: number) {
+  this.entryDataService.removeEntry(entryID)
+  console.log('deleting entry', entryID)
+}
+
+
+
 
 }
