@@ -63,6 +63,9 @@ private saveEntry() {
   this.navCtrl.pop();
 }
 
+public cancelEntry() {
+  this.navCtrl.pop();
+}
 
 
 
