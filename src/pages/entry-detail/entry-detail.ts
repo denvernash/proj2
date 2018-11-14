@@ -19,6 +19,7 @@ import { EntryDataServiceProvider } from '../../providers/entry-data-service/ent
 export class EntryDetailPage {
 
   private entry: Entry;
+  private createDate: Date;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -36,7 +37,11 @@ export class EntryDetailPage {
     this.entry.id = -1; // placeholder for 'temporary' entry
   } else {
   this.entry = this.entryDataService.getEntryByID(entryID);
-  }
+  if (typeof this.entry.timestamp === 'string') {
+    this.createDate = new Date(this.entry.timestamp);
+  } else { this.createDate = this.entry.timestamp }
+  
+}
     console.log("retrieved entry:", entry);
 
   }
@@ -57,6 +62,8 @@ private saveEntry() {
   }
   this.navCtrl.pop();
 }
+
+
 
 
   ionViewDidLoad() {

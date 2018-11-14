@@ -18,10 +18,27 @@ export class HomePage {
 
       this.entryDataService.getObservable().subscribe(update => {
         this.entries = entryDataService.getEntries();
-        console.log(this.entries);
-        });
+        console.log('hello')
 
-        this.entries = entryDataService.getEntries();
+        for (let e of this.entries) {
+          if (typeof e.timestamp === 'string') {
+            console.log('hi')
+            e.timestamp = new Date(e.timestamp);
+          }
+        }
+       
+        
+        
+        
+       
+      
+      this.entries.sort((a: Entry, b: Entry) => {
+        return a.timestamp.getTime() - b.timestamp.getTime()
+      }).reverse();
+      console.log(this.entries);
+    });
+
+    
       }
 
 
@@ -46,7 +63,9 @@ private deleteEntry(entryID: number) {
   console.log('deleting entry', entryID)
 }
 
-
+// public printDate(entry: Entry): any {
+//   return entry.timestamp.getMonth();
+// }
 
 
 }

@@ -44,10 +44,9 @@ export class EntryDataServiceProvider {
 
     });
 
+    
 
   }
-
-  
 
   private getUniqueID(): number {
     let uniqueID = this.nextID++;
@@ -58,10 +57,11 @@ export class EntryDataServiceProvider {
 
 public addEntry(entry:Entry) {
   entry.id = this.getUniqueID();
+  entry.timestamp = new Date();
   this.entries.push(entry);
   this.notifySubscribers();
   this.saveData();
-  // console.log('added an entry, the list is now: ', this.entries)
+  // console.log('added an entry, the list is now: ', entry.timestamp)
 }
 
   
@@ -100,6 +100,7 @@ public updateEntry(id: number, newEntry: Entry): void {
   let entryToUpdate: Entry = this.findEntryByID(id);
   entryToUpdate.title = newEntry.title;
   entryToUpdate.text = newEntry.text;
+  entryToUpdate.timestamp = new Date();
   this.notifySubscribers();
   this.saveData();
 }
