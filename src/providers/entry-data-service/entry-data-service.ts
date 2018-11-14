@@ -21,20 +21,28 @@ export class EntryDataServiceProvider {
   private clientObservable: Observable<Entry[]>;
 
   constructor(private storage: Storage) { 
-    this.loadFakeEntries(); 
+
     this.clientObservable = Observable.create(observerThatWasCreated => {
       this.serviceObserver = observerThatWasCreated;
     });
     this.storage.get('myDiaryEntries').then(data => {
       if (data != undefined && data != null) {
         this.entries = JSON.parse(data);
+        this.notifySubscribers();
      
       }
 
     }, err =>{
       console.log(err)
     });
+    this.storage.get('nextID').then(data => {
+      if(data != undefined && data != null) {
+        this.nextID = data;
+      }
+    }, err =>{
+      console.log(err)
 
+    });
 
 
   }
@@ -42,7 +50,9 @@ export class EntryDataServiceProvider {
   
 
   private getUniqueID(): number {
-    return this.nextID++;
+    let uniqueID = this.nextID++;
+    this.storage.set('nextID', this.nextID);
+    return uniqueID;
   }
 
 
@@ -62,26 +72,6 @@ public addEntry(entry:Entry) {
 
 public getObservable(): Observable<Entry[]> {
   return this.clientObservable;
-}
-
-private loadFakeEntries() {
-  this.entries = [
-    {
-      id: this.getUniqueID(),
-      title: "Latest Entry",
-      text: "Today I went to my favorite class, SI 669. It was super great."
-    },
-    {
-      id: this.getUniqueID(),
-      title: "Earlier Entry",
-      text: "I can't wait for Halloween! I'm going to eat so much candy!!!"
-    },
-    {
-      id: this.getUniqueID(),
-      title: "First Entry",
-      text: "OMG Project 1 was the absolute suck!"
-    }
-  ];
 }
 
 
