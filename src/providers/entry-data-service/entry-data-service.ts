@@ -65,6 +65,11 @@ export class EntryDataServiceProvider {
 public addEntry(entry:Entry) {
   entry.id = this.getUniqueID();
   entry.timestamp = new Date();
+  
+  let listRef = this.db.ref('/allEntry');
+  let newEntry = listRef.push();
+  newEntry.set(entry);
+
   this.entries.push(entry);
   this.notifySubscribers();
   this.saveData();
