@@ -4,4 +4,5 @@ export class Entry {
     text: string;
     image: string;
     timestamp: Date;
+    time: number;
 }
