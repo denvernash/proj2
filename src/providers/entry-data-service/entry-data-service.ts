@@ -3,7 +3,7 @@ import { Entry } from '../../models/entry';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Storage } from '@ionic/storage';
-import { firebaseConfig } from '../../models/fire';
+import { firebaseConfig } from '../../models/firefile';
 import firebase from 'firebase';
 
 
