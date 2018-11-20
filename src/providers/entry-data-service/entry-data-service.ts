@@ -19,10 +19,10 @@ export class EntryDataServiceProvider {
 
 
   private db: any;
-  private nextID: number = 0;
   private entries:Entry[] = [];
   private serviceObserver: Observer<Entry[]>;
   private clientObservable: Observable<Entry[]>;
+  private nextID: number = 0;
 
   constructor(private storage: Storage) { 
 
@@ -32,43 +32,57 @@ export class EntryDataServiceProvider {
     this.clientObservable = Observable.create(observerThatWasCreated => {
       this.serviceObserver = observerThatWasCreated;
     });
-    this.storage.get('myDiaryEntries').then(data => {
-      if (data != undefined && data != null) {
-        this.entries = JSON.parse(data);
-        this.notifySubscribers();
-     
-      }
 
-    }, err =>{
-      console.log(err)
-    });
-    this.storage.get('nextID').then(data => {
-      if(data != undefined && data != null) {
-        this.nextID = data;
-      }
-    }, err =>{
-      console.log(err)
-
-    });
-
+    let dataRef = this.db.ref('/allEntry');
+    dataRef.on('value', snapshot => {
+    this.entries = []; //start with a blank list
+    snapshot.forEach(childSnapshot => {
+      let newbie = new Entry;
+      newbie.id = childSnapshot.val().id;
+      newbie.title = childSnapshot.val().title;
+      newbie.text = childSnapshot.val().text;
+      newbie.image = childSnapshot.val().image;
+      newbie.time = childSnapshot.val().time;
+      newbie.timestamp = new Date(newbie.time);
+    this.entries.push(newbie);
     
+     });
+     this.notifySubscribers(); 
+    });
+
+    let Ref = this.db.ref('/lastID');
+    Ref.on('value', snapshot => {
+      if(snapshot.exists()) { 
+        this.nextID = (snapshot.val().nextID)+1
+    //  console.log("HERES THE ID FROM STORAGE", this.nextID)
+     this.notifySubscribers(); }
+    });
+
+
 
   }
 
   private getUniqueID(): number {
     let uniqueID = this.nextID++;
-    this.storage.set('nextID', this.nextID);
+    let listRef = this.db.ref('/lastID');
+    listRef.set({'nextID': uniqueID});
     return uniqueID;
   }
 
 
 public addEntry(entry:Entry) {
   entry.id = this.getUniqueID();
+  // console.log("HERES YOUR ID", entry.id)
   entry.timestamp = new Date();
-  this.entries.push(entry);
+  entry.time = entry.timestamp.getTime();
+  
+  let listRef = this.db.ref('/allEntry');
+  listRef.child(entry.id).set(entry);
+
+
   this.notifySubscribers();
   this.saveData();
-  // console.log('added an entry, the list is now: ', entry.timestamp)
+  
 }
 
   
@@ -107,7 +121,7 @@ public updateEntry(id: number, newEntry: Entry): void {
   let entryToUpdate: Entry = this.findEntryByID(id);
   entryToUpdate.title = newEntry.title;
   entryToUpdate.text = newEntry.text;
-  entryToUpdate.timestamp = new Date();
+  entryToUpdate.timestamp = new Date()
   this.notifySubscribers();
   this.saveData();
 }

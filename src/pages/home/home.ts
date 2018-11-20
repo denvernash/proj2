@@ -25,11 +25,11 @@ export class HomePage {
 
       this.entryDataService.getObservable().subscribe(update => {
         this.entries = entryDataService.getEntries();
-        console.log('hello')
+
 
         for (let e of this.entries) {
           if (typeof e.timestamp === 'string') {
-            console.log('hi')
+          
             e.timestamp = new Date(e.timestamp);
           }
         }
