@@ -19,10 +19,10 @@ export class EntryDataServiceProvider {
 
 
   private db: any;
-  private nextID: number = 0;
   private entries:Entry[] = [];
   private serviceObserver: Observer<Entry[]>;
   private clientObservable: Observable<Entry[]>;
+  private nextID: number = 0;
 
   constructor(private storage: Storage) { 
 
