@@ -3,6 +3,8 @@ import { Entry } from '../../models/entry';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Storage } from '@ionic/storage';
+import { firebaseConfig } from '../../models/fire';
+import firebase from 'firebase';
 
 
 /*
@@ -15,12 +17,17 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class EntryDataServiceProvider {
 
+
+  private db: any;
   private nextID: number = 0;
   private entries:Entry[] = [];
   private serviceObserver: Observer<Entry[]>;
   private clientObservable: Observable<Entry[]>;
 
   constructor(private storage: Storage) { 
+
+    firebase.initializeApp(firebaseConfig);
+    this.db = firebase.database();
 
     this.clientObservable = Observable.create(observerThatWasCreated => {
       this.serviceObserver = observerThatWasCreated;
