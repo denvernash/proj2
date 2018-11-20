@@ -2,14 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Entry } from '../../models/entry';
 import { EntryDataServiceProvider } from '../../providers/entry-data-service/entry-data-service';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
-
-/**
- * Generated class for the EntryDetailPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
+const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
 
 @IonicPage()
 @Component({
@@ -20,12 +16,12 @@ export class EntryDetailPage {
 
   private entry: Entry;
   private createDate: Date;
+  private image = PLACEHOLDER_IMAGE;
+
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    public entryDataService: EntryDataServiceProvider) {
-
-
+    public entryDataService: EntryDataServiceProvider, private camera: Camera) {
 
     let entryID = this.navParams.get("entryID");
     let entry = this.entryDataService.getEntryByID(entryID);
@@ -35,6 +31,7 @@ export class EntryDetailPage {
     this.entry.title = "";
     this.entry.text = "";
     this.entry.id = -1; // placeholder for 'temporary' entry
+    this.entry.image = PLACEHOLDER_IMAGE;
   } else {
   this.entry = this.entryDataService.getEntryByID(entryID);
   if (typeof this.entry.timestamp === 'string') {
@@ -45,14 +42,6 @@ export class EntryDetailPage {
     console.log("retrieved entry:", entry);
 
   }
-
-
-// private saveEntry() {
-//   let newEntry = new Entry();
-//   newEntry.title = this.entryTitle;
-//   newEntry.text = this.entryText; 
-// }
-
 
 private saveEntry() {
   if (this.entry.id === -1) { 
@@ -67,10 +56,27 @@ public cancelEntry() {
   this.navCtrl.pop();
 }
 
-
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad EntryDetailPage');
+  }
+
+  private takePic() {
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      if (imageData) {
+        this.image = 'data:image/jpeg;base64,' + imageData;        
+      } else {
+        this.image = PLACEHOLDER_IMAGE;
+      }
+     }, (err) => {
+        this.image = PLACEHOLDER_IMAGE;
+     });
+    this.image = SPINNER_IMAGE;
   }
 
 }

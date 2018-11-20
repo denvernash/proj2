@@ -13,19 +13,20 @@
       </ion-item>
 
     <ion-item *ngFor="let entry of entries">
-      <button ion-button clear icon-only item-start
-      (click)="deleteEntry(entry.id)">
-          <ion-icon name="close-circle"></ion-icon>
-      </button>
-      <ion-label (click)="editEntry(entry.id)">
-        <h2>{{entry.title}}</h2>
-      </ion-label>
+        <ion-label (click)="editEntry(entry.key)">
+        <img class="diaryimage" [src]="entry.image" /></ion-label>
+
+      <ion-label (click)="editEntry(entry.id)"><h2>{{entry.title}}</h2></ion-label>
       <ion-label (click)="editEntry(entry.id)">
         <p>{{entry.text}}</p>
-      </ion-label>
-      <ion-label (click)="editEntry(entry.id)">
         <p>{{entry.timestamp}}</p>
+
       </ion-label>
+      
+      <button ion-button clear icon-only item-end (click)="deleteEntry(entry.key)">
+          <ion-icon name="close-circle"></ion-icon>
+        </button>
     </ion-item>
   </ion-list>
+
 </ion-content>

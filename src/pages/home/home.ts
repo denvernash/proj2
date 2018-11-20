@@ -4,6 +4,11 @@ import { Entry } from '../../models/entry';
 import { EntryDetailPage } from '../entry-detail/entry-detail';
 import { EntryDataServiceProvider } from '../../providers/entry-data-service/entry-data-service';
 
+import { Camera, CameraOptions } from '@ionic-native/camera';
+
+const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
+const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
+
 
 @Component({
   selector: 'page-home',
@@ -11,10 +16,12 @@ import { EntryDataServiceProvider } from '../../providers/entry-data-service/ent
 })
 export class HomePage {
   public entries: Entry[] = [];
-  
+
+  private image = PLACEHOLDER_IMAGE;
+
   
   constructor(public navCtrl: NavController,
-    public entryDataService: EntryDataServiceProvider) {
+    public entryDataService: EntryDataServiceProvider, private camera: Camera) {
 
       this.entryDataService.getObservable().subscribe(update => {
         this.entries = entryDataService.getEntries();
@@ -26,12 +33,7 @@ export class HomePage {
             e.timestamp = new Date(e.timestamp);
           }
         }
-       
-        
-        
-        
-       
-      
+
       this.entries.sort((a: Entry, b: Entry) => {
         return a.timestamp.getTime() - b.timestamp.getTime()
       }).reverse();
@@ -40,12 +42,6 @@ export class HomePage {
 
     
       }
-
-
-  
-// public ionViewWillEnter() {
-//   this.entries = this.entryDataService.getEntries();
-// }
 
   
   private addEntry() {
@@ -63,9 +59,6 @@ private deleteEntry(entryID: number) {
   console.log('deleting entry', entryID)
 }
 
-// public printDate(entry: Entry): any {
-//   return entry.timestamp.getMonth();
-// }
-
 
 }
+
