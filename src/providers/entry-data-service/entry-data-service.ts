@@ -121,6 +121,7 @@ public updateEntry(id: number, newEntry: Entry): void {
   let entryToUpdate: Entry = this.findEntryByID(id);
   entryToUpdate.title = newEntry.title;
   entryToUpdate.text = newEntry.text;
+  entryToUpdate.image = newEntry.image;
   entryToUpdate.timestamp = new Date()
   this.notifySubscribers();
   this.saveData();

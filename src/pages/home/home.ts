@@ -4,11 +4,6 @@ import { Entry } from '../../models/entry';
 import { EntryDetailPage } from '../entry-detail/entry-detail';
 import { EntryDataServiceProvider } from '../../providers/entry-data-service/entry-data-service';
 
-import { Camera, CameraOptions } from '@ionic-native/camera';
-
-const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
-const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
-
 
 @Component({
   selector: 'page-home',
@@ -17,11 +12,9 @@ const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
 export class HomePage {
   public entries: Entry[] = [];
 
-  private image = PLACEHOLDER_IMAGE;
-
   
   constructor(public navCtrl: NavController,
-    public entryDataService: EntryDataServiceProvider, private camera: Camera) {
+    public entryDataService: EntryDataServiceProvider) {
 
       this.entryDataService.getObservable().subscribe(update => {
         this.entries = entryDataService.getEntries();
@@ -40,7 +33,6 @@ export class HomePage {
       console.log(this.entries);
     });
 
-    
       }
 
   
