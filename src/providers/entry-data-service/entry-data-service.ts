@@ -123,6 +123,7 @@ public updateEntry(id: number, newEntry: Entry): void {
   entryToUpdate.timestamp = new Date();
   entryToUpdate.time = entryToUpdate.timestamp.getTime();
   entryToUpdate.image = newEntry.image;
+
   this.notifySubscribers();
   this.saveData();
 }

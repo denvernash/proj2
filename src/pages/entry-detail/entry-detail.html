@@ -7,7 +7,7 @@
     <ion-item><ion-input type="text" placeholder="New Entry" [(ngModel)]="entry.title"></ion-input></ion-item>
 
     <ion-item color="secondary"><ion-label>Photo</ion-label></ion-item>
-    <ion-item><img [src]="image"/></ion-item>
+    <ion-item><img (click)="takePic()" [src]="entry.image" /></ion-item>
 
     
     <ion-item  color="secondary"><ion-label>Thoughts and experiences: </ion-label></ion-item>

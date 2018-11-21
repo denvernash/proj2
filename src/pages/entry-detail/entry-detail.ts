@@ -61,6 +61,7 @@ public cancelEntry() {
   }
 
   private takePic() {
+    let img = this.entry.image;
     const options: CameraOptions = {
       quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -69,14 +70,14 @@ public cancelEntry() {
     }
     this.camera.getPicture(options).then((imageData) => {
       if (imageData) {
-        this.image = 'data:image/jpeg;base64,' + imageData;        
+        this.entry.image = 'data:image/jpeg;base64,' + imageData;        
       } else {
-        this.image = PLACEHOLDER_IMAGE;
+        this.entry.image = img;
       }
      }, (err) => {
-        this.image = PLACEHOLDER_IMAGE;
+        this.entry.image = img;
      });
-    this.image = SPINNER_IMAGE;
+    this.entry.image = SPINNER_IMAGE;
   }
 
 }
