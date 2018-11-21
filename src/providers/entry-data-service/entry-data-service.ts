@@ -75,11 +75,7 @@ public addEntry(entry:Entry) {
   // console.log("HERES YOUR ID", entry.id)
   entry.timestamp = new Date();
   entry.time = entry.timestamp.getTime();
-  
-  let listRef = this.db.ref('/allEntry');
-  listRef.child(entry.id).set(entry);
-
-
+  this.entries.push(entry)
   this.notifySubscribers();
   this.saveData();
   
@@ -101,8 +97,11 @@ private notifySubscribers(): void {
 }
 
 private saveData(): void {
-  let key = 'myDiaryEntries';
-  this.storage.set(key, JSON.stringify(this.entries));
+  
+  let listRef = this.db.ref('/allEntry');
+  for (let entry of this.entries) {
+  listRef.child(entry.id).set(entry);
+}
 }
 
 
@@ -121,8 +120,10 @@ public updateEntry(id: number, newEntry: Entry): void {
   let entryToUpdate: Entry = this.findEntryByID(id);
   entryToUpdate.title = newEntry.title;
   entryToUpdate.text = newEntry.text;
+  entryToUpdate.timestamp = new Date();
+  entryToUpdate.time = entryToUpdate.timestamp.getTime();
   entryToUpdate.image = newEntry.image;
-  entryToUpdate.timestamp = new Date()
+
   this.notifySubscribers();
   this.saveData();
 }
@@ -137,15 +138,19 @@ private findEntryByID(id: number): Entry {
 }
 
 public removeEntry(id: number): void {
+  let listRef = this.db.ref('/allEntry');
   for (let i=0; i < this.entries.length; i++) {
+    console.log(i)
     let iID = this.entries[i].id;
     if (iID === id) {
       this.entries.splice(i, 1);
+      listRef.child(iID).remove()
       break;
     }
   }
   this.notifySubscribers();
   this.saveData();
+
 }
 
 
