@@ -13,7 +13,7 @@
       </ion-item>
 
     <ion-item *ngFor="let entry of entries">
-        <ion-label (click)="editEntry(entry.key)">
+        <ion-label (click)="editEntry(entry.id)">
         <img class="diaryimage" [src]="entry.image" /></ion-label>
 
       <ion-label (click)="editEntry(entry.id)"><h2>{{entry.title}}</h2></ion-label>
